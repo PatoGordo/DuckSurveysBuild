@@ -14,28 +14,53 @@ function GenerateId(len: number, base?: string) {
 const starRatingSurvey =
   document.querySelectorAll<HTMLElement>("star-rating-survey");
 
-starRatingSurvey.forEach((item) => {
-  const title = item.getAttribute("title") || "Unnamed survey";
-  const textAfterSubmit =
-    item.getAttribute("text-after-submit") || "Thanks for the feedback!";
-  const icon = item.getAttribute("icon") || "star";
-  const maxCount = Number(item.getAttribute("max-count")) || 5;
-
-  const surveyID = `DKS_STAR_RATING_${GenerateId(8)}`;
-
+starRatingSurvey.forEach(async (item) => {
   const titleElement = document.createElement("h2");
   const starsElement = document.createElement("div");
   const buttonSubmitElement = document.createElement("button");
   const feedbackView = document.createElement("div");
+  const loadingView = document.createElement("div");
+  const loadingViewLoader = document.createElement("span");
   const afterSubmitView = document.createElement("div");
   const afterSubmitText = document.createElement("h2");
   const afterSubmitButton = document.createElement("button");
 
   feedbackView.classList.add("DKS_STAR_RATING_VIEW");
   afterSubmitView.classList.add("DKS_STAR_RATING_VIEW");
+  loadingView.classList.add("DKS_STAR_RATING_VIEW");
   starsElement.classList.add("DKS_STAR_RATING_STARS");
   buttonSubmitElement.classList.add("DKS_STAR_RATING_BUTTON");
   afterSubmitButton.classList.add("DKS_STAR_RATING_BUTTON");
+  loadingViewLoader.classList.add("DKS_LOADING_ELEMENT");
+
+  loadingView.appendChild(loadingViewLoader);
+  item.appendChild(loadingView);
+
+  loadingView.style.display = "flex";
+  feedbackView.style.display = "none";
+  afterSubmitView.style.display = "none";
+
+  const surveyId = item.getAttribute("survey-id") || null;
+
+  if (surveyId) {
+    const res = await fetch(
+      `https://feedback-api.vercel.app/star-rating/get/${surveyId}`
+    );
+    const data = await res.json();
+    var survey = data.survey;
+  }
+
+  loadingView.style.display = "none";
+  feedbackView.style.display = "flex";
+
+  const title = survey ? survey.surveyTitle : item.getAttribute("title");
+  const textAfterSubmit =
+    item.getAttribute("text-after-submit") || "Thanks for the feedback!";
+  const icon = survey ? survey.icon : item.getAttribute("icon");
+  const maxCount = survey ? survey.maxCount : item.getAttribute("max-count");
+  const closeButtonAfterSubmit = item.getAttribute("close-button-after-submit") || false
+
+  const surveyID = `DKS_STAR_RATING_${survey ? survey._id : GenerateId(24)}`;
 
   const stars: HTMLElement[] = [];
 
@@ -79,12 +104,11 @@ starRatingSurvey.forEach((item) => {
   feedbackView.appendChild(titleElement);
   feedbackView.appendChild(starsElement);
   feedbackView.appendChild(buttonSubmitElement);
+  afterSubmitButton.appendChild(document.createTextNode("Close"));
   afterSubmitView.style.display = "none";
 
-  afterSubmitButton.appendChild(document.createTextNode("Close"));
-
   // Button submit
-  buttonSubmitElement.addEventListener("click", () => {
+  buttonSubmitElement.addEventListener("click", async () => {
     let starFeedbackCount = 0;
 
     stars.map((star) => {
@@ -93,10 +117,22 @@ starRatingSurvey.forEach((item) => {
       }
     });
 
+    loadingView.style.display = "flex";
+    feedbackView.style.display = "none";
+
     console.log(starFeedbackCount);
 
+    // Add evaluation to api
+    if(survey) {
+      const res = await fetch(
+        `https://feedback-api.vercel.app/star-rating/get/${surveyId}`
+      );
+      const data = await res.json();
+    }
+
     feedbackView.style.display = "none";
-    afterSubmitView.style.display = "block";
+    loadingView.style.display = "none";
+    afterSubmitView.style.display = "flex";
   });
 
   // Close button after submit
@@ -106,7 +142,10 @@ starRatingSurvey.forEach((item) => {
 
   afterSubmitText.appendChild(document.createTextNode(textAfterSubmit));
   afterSubmitView.appendChild(afterSubmitText);
-  afterSubmitView.appendChild(afterSubmitButton);
+
+  if(closeButtonAfterSubmit) {
+    afterSubmitView.appendChild(afterSubmitButton);
+  }
 
   item.appendChild(feedbackView);
   item.appendChild(afterSubmitView);
