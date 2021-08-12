@@ -1,5 +1,7 @@
 {
   "scripts": {
+    "dev:ts": "tsc --watch",
+    "dev:sass": "node-sass -rw src/scss -o dist --output-style --compressed --watch",
     "build": "tsc && uglifyjs dist/dks.js > dist/dks.min.js && node-sass src/scss -o dist --output-style compressed"
   },
   "devDependencies": {
