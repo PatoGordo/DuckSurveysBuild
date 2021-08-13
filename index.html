@@ -13,23 +13,34 @@
 <body>
 	<a href="/dist/dks.min.js">https://duck-surveys.vercel.app/dist/dks.min.js</a>
 	<br>
-  <a href="/dist/dks.css">https://duck-surveys.vercel.app/dist/dks.min.js</a>
+  <a href="/dist/dks.css">https://duck-surveys.vercel.app/dist/dks.css</a>
+
+  <form
+    dks-opinion-form
+    dks-callback="DksCallback"
+   >
+    <textarea dks-opinion-input placeholder="What is your opinion about..."></textarea>
+    
+    <button type="submit">Submit</button>
+  </form>
 
   <h1>Exemple of data coming from server</h1>
 
-  <star-rating-survey
+  <dks-star-rating-survey
     survey-id="61153cbbe7d56f139c550fa0"
+    dks-callback="DksCallback"
     close-button-after-submit="true"
-  ></star-rating-survey>
+  ></dks-star-rating-survey>
 
   <h1>Exemple of data not coming from server</h1>
 
-  <star-rating-survey
+  <dks-star-rating-survey
     max-count="5"
     title="From 0 to 5, how much does this package help?"
+    dks-callback="DksCallback"
     text-after-submit=""
     icon="star"
-  ></star-rating-survey>
+  ></dks-star-rating-survey>
 
   <p>
     &lt;head&gt;
@@ -58,7 +69,7 @@
   <p>
     &nbsp;&nbsp;&lt;!-- If the data is not coming from server --&gt;
     <br>
-    &nbsp;&nbsp;&lt;star-rating-survey
+    &nbsp;&nbsp;&lt;dks-star-rating-survey
     <br>
     &nbsp;&nbsp;&nbsp;&nbsp;max-count="OPTIONAL"
     <br>
@@ -70,17 +81,30 @@
     <br>
     &nbsp;&nbsp;&nbsp;&nbsp;icon="FONT_AWESOME_ICON"
     <br>
-    &nbsp;&nbsp;&gt;&lt;/star-rating-survey&gt;
+    &nbsp;&nbsp;&gt;&lt;/dks-star-rating-survey&gt;
     <br>
     <br>
     &nbsp;&nbsp;&lt;!-- If the data is coming from server --&gt;
     <br>
-    &nbsp;&nbsp;&lt;star-rating-survey
+    &nbsp;&nbsp;&lt;dks-star-rating-survey
     <br>
     &nbsp;&nbsp;&nbsp;&nbsp;survey-id="DKS_SURVEY_ID"
     <br>
-    &nbsp;&nbsp;&gt;&lt;/star-rating-survey&gt;
+    &nbsp;&nbsp;&gt;&lt;/dks-star-rating-survey&gt;
   </p>
+
+  <script>
+    // db exemple
+    const db = []
+
+    function DksCallback(e) {
+      db.push({
+        evaluation: e,
+      })
+      alert(`Your feedback is "${e}"`)
+      console.log(db)
+    }
+  </script>
 
   <script src="dist/dks.js"></script>
 </body>
