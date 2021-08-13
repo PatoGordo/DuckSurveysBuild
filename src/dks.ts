@@ -1,18 +1,58 @@
-function GenerateId(len: number, base?: string) {
-  base =
-    base || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const utils = {
+  GenerateId(len: number, base?: string) {
+    base =
+      base || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  var randomString = "";
-  for (var i = 0; i < len; i++) {
-    var randomPoz = Math.floor(Math.random() * base.length);
-    randomString += base.substring(randomPoz, randomPoz + 1);
-  }
+    var randomString = "";
+    for (var i = 0; i < len; i++) {
+      var randomPoz = Math.floor(Math.random() * base.length);
+      randomString += base.substring(randomPoz, randomPoz + 1);
+    }
 
-  return randomString;
-}
+    return randomString;
+  },
+};
 
-const starRatingSurvey =
-  document.querySelectorAll<HTMLElement>("star-rating-survey");
+const textOpinionFeedback =
+  document.querySelectorAll<HTMLElement>("[dks-opinion-form]");
+
+textOpinionFeedback.forEach((item) => {
+  item.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let opinionTextInput = "";
+
+    const validChilds = ["INPUT", "TEXTAREA"];
+
+    Array.from(item.children).forEach((child) => {
+      opinionTextInput = (child as HTMLInputElement).value;
+
+      if (!opinionTextInput || opinionTextInput.trim() === "") {
+        return;
+      }
+
+      if (child.hasAttribute("dks-opinion-input")) {
+        if (!validChilds.includes(child.tagName)) {
+          throw new Error(
+            "Invalid tag! dks-opinion-input can only be <input> and <textarea>"
+          );
+        }
+
+        if (item.hasAttribute("dks-callback")) {
+          const stringCallback = item.getAttribute("dks-callback");
+
+          var callback = new Function("e", "return " + stringCallback + "(e)");
+          return callback(opinionTextInput);
+        }
+
+        console.log(opinionTextInput);
+      }
+    });
+  });
+});
+
+const starRatingSurvey = document.querySelectorAll<HTMLElement>(
+  "dks-star-rating-survey"
+);
 
 starRatingSurvey.forEach(async (item) => {
   const titleElement = document.createElement("h2");
@@ -58,9 +98,12 @@ starRatingSurvey.forEach(async (item) => {
     item.getAttribute("text-after-submit") || "Thanks for the feedback!";
   const icon = survey ? survey.icon : item.getAttribute("icon");
   const maxCount = survey ? survey.maxCount : item.getAttribute("max-count");
-  const closeButtonAfterSubmit = item.getAttribute("close-button-after-submit") || false
+  const closeButtonAfterSubmit =
+    item.getAttribute("close-button-after-submit") || false;
 
-  const surveyID = `DKS_STAR_RATING_${survey ? survey._id : GenerateId(24)}`;
+  const surveyID = `DKS_STAR_RATING_${
+    survey ? survey._id : utils.GenerateId(24)
+  }`;
 
   const stars: HTMLElement[] = [];
 
@@ -123,11 +166,18 @@ starRatingSurvey.forEach(async (item) => {
     console.log(starFeedbackCount);
 
     // Add evaluation to api
-    if(survey) {
+    if (survey) {
       const res = await fetch(
         `https://feedback-api.vercel.app/star-rating/get/${surveyId}`
       );
       const data = await res.json();
+    }
+
+    if (item.hasAttribute("dks-callback")) {
+      const stringCallback = item.getAttribute("dks-callback");
+
+      var callback = new Function("e", "return " + stringCallback + "(e)");
+      callback(starFeedbackCount);
     }
 
     feedbackView.style.display = "none";
@@ -143,7 +193,7 @@ starRatingSurvey.forEach(async (item) => {
   afterSubmitText.appendChild(document.createTextNode(textAfterSubmit));
   afterSubmitView.appendChild(afterSubmitText);
 
-  if(closeButtonAfterSubmit) {
+  if (closeButtonAfterSubmit) {
     afterSubmitView.appendChild(afterSubmitButton);
   }
 
