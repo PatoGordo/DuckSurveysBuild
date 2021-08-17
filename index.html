@@ -1,111 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="dist/dks.css">
-	</link>
-	<title>Document</title>
-</head>
-
-<body>
-	<a href="/dist/dks.min.js">https://duck-surveys.vercel.app/dist/dks.min.js</a>
-	<br>
-  <a href="/dist/dks.css">https://duck-surveys.vercel.app/dist/dks.css</a>
-
-  <form
-    dks-opinion-form
-    dks-callback="DksCallback"
-   >
-    <textarea dks-opinion-input placeholder="What is your opinion about..."></textarea>
-    
-    <button type="submit">Submit</button>
-  </form>
-
-  <h1>Exemple of data coming from server</h1>
-
-  <dks-star-rating-survey
-    survey-id="61153cbbe7d56f139c550fa0"
-    dks-callback="DksCallback"
-    close-button-after-submit="true"
-  ></dks-star-rating-survey>
-
-  <h1>Exemple of data not coming from server</h1>
-
-  <dks-star-rating-survey
-    max-count="5"
-    title="From 0 to 5, how much does this package help?"
-    dks-callback="DksCallback"
-    text-after-submit=""
-    icon="star"
-  ></dks-star-rating-survey>
-
-  <p>
-    &lt;head&gt;
-    <br>
-    &nbsp;&nbsp;...
-    <br>
-    &nbsp;&nbsp;&lt;!-- Add the font-awesome cdn to the icons work --&gt;
-    <br>
-    &nbsp;&nbsp;&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /&gt;
-    <br>
-    <br>
-    &nbsp;&nbsp;&lt;!-- (Optional) survey component styles [Light theme only] --&gt;
-    <br>
-    &nbsp;&nbsp;&lt;link rel="stylesheet" href="https://duck-surveys.vercel.app/dist/dks.css"&gt;&lt;/link&gt;
-    <br>
-    <br>
-    &nbsp;&nbsp;&lt;!-- Add this script to the components work --&gt;
-    <br>
-    &nbsp;&nbsp;&lt;script src="https://duck-surveys.vercel.app/dist/dks.min.js" defer&gt;&lt;/script&gt;
-    <br>
-    &lt;/head&gt;
-  </p>
-
-  <br>
-
-  <p>
-    &nbsp;&nbsp;&lt;!-- If the data is not coming from server --&gt;
-    <br>
-    &nbsp;&nbsp;&lt;dks-star-rating-survey
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;max-count="OPTIONAL"
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;title="OPTIONAL"
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;text-after-submit="OPTIONAL"
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;close-button-after-submit
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;icon="FONT_AWESOME_ICON"
-    <br>
-    &nbsp;&nbsp;&gt;&lt;/dks-star-rating-survey&gt;
-    <br>
-    <br>
-    &nbsp;&nbsp;&lt;!-- If the data is coming from server --&gt;
-    <br>
-    &nbsp;&nbsp;&lt;dks-star-rating-survey
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;survey-id="DKS_SURVEY_ID"
-    <br>
-    &nbsp;&nbsp;&gt;&lt;/dks-star-rating-survey&gt;
-  </p>
-
-  <script>
-    // db exemple
-    const db = []
-
-    function DksCallback(e) {
-      db.push({
-        evaluation: e,
-      })
-      alert(`Your feedback is "${e}"`)
-      console.log(db)
-    }
-  </script>
-
-  <script src="dist/dks.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vite App</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <star-rating></star-rating>
+  </body>
 </html>

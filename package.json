@@ -1,12 +1,14 @@
 {
+  "name": "star-rating",
+  "version": "0.0.0",
   "scripts": {
-    "dev:ts": "tsc --watch",
-    "dev:sass": "node-sass -rw src/scss -o dist --output-style --compressed --watch",
-    "build": "tsc && uglifyjs dist/dks.js > dist/dks.min.js && node-sass src/scss -o dist --output-style compressed"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "devDependencies": {
-    "node-sass": "^6.0.1",
-    "typescript": "^4.3.5",
-    "uglify-js": "^3.14.1"
+    "sass": "^1.38.0",
+    "typescript": "^4.3.2",
+    "vite": "^2.4.4"
   }
 }

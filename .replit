@@ -1,2 +1,0 @@
-lang = "nodejs"
-run = "yarn build"
